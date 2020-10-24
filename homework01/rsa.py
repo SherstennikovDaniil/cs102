@@ -20,7 +20,6 @@ def is_prime(n: int) -> bool:
             if n % (i + 2) == 0:
                 return False
         return True
-    pass
 
 
 def gcd(a: int, b: int) -> int:
@@ -34,11 +33,10 @@ def gcd(a: int, b: int) -> int:
     """
     while a != 0 and b != 0:
         if a > b:
-            a = a % b
+            a %= b
         else:
-            b = b % a
+            b %= a
     return a+b
-    pass
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
@@ -49,12 +47,11 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    e = e % phi
+    e %= phi
     for i in range(1,phi):
         if (e * i) % phi == 1:
             return i
     return 0
-    pass
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
