@@ -32,7 +32,7 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
-    while a != 0 and b != 0:        #есть же фунцкия gcd((((
+    while a != 0 and b != 0:
         if a > b:
             a = a % b
         else:
