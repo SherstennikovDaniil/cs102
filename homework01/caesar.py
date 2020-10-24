@@ -45,8 +45,7 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     alph = [chr(letter) for letter in range(ord("a"), (ord("a") + shift))] + [chr(letter) for letter in
                                                                               range(ord("A"), (ord("A") + shift))]
     for letter in ciphertext:
-        if (ord(letter) >= ord("a") and ord(letter) <= ord("z")) or (
-                ord(letter) >= ord("A") and ord(letter) <= ord("Z")):
+        if (ord("a") <= ord(letter) <= ord("z")) or (ord("A") <= ord(letter) <= ord("Z")):
             if letter in alph:
                 plaintext = plaintext + chr(ord(letter) + 26 - shift)
             else:
