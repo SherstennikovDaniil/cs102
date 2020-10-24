@@ -17,13 +17,14 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     alph = [chr(letter) for letter in range((ord("z") - shift), ord("z"))] + [chr(letter) for letter in
                                                                               range((ord("Z") - shift), ord("Z"))]
     for letter in plaintext:
-        if (ord("a") <= ord(letter) <= ord("z")) or (ord("A") <= ord(letter) <= ord("Z")):
+        if (ord(letter) >= ord("a") and ord(letter) <= ord("z")) or (
+                ord(letter) >= ord("A") and ord(letter) <= ord("Z")):
             if letter in alph:
                 ciphertext = ciphertext + chr(ord(letter) - 26 + shift)
             else:
                 ciphertext = ciphertext + chr(ord(letter) + shift)
         else:
-            ciphertext = ciphertext + letter
+            ciphertext += letter
     return ciphertext
 
 
@@ -44,13 +45,14 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     alph = [chr(letter) for letter in range(ord("a"), (ord("a") + shift))] + [chr(letter) for letter in
                                                                               range(ord("A"), (ord("A") + shift))]
     for letter in ciphertext:
-        if (ord("a") <= ord(letter) <= ord("z")) or (ord("A") <= ord(letter) <= ord("Z")):
+        if (ord(letter) >= ord("a") and ord(letter) <= ord("z")) or (
+                ord(letter) >= ord("A") and ord(letter) <= ord("Z")):
             if letter in alph:
                 plaintext = plaintext + chr(ord(letter) + 26 - shift)
             else:
                 plaintext = plaintext + chr(ord(letter) - shift)
         else:
-            plaintext = plaintext + letter
+            plaintext += letter
     return plaintext
 
 
