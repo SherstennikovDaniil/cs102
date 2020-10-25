@@ -1,5 +1,6 @@
 import typing as tp
 
+
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
@@ -14,8 +15,9 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    alph = [chr(letter) for letter in range((ord("z") - shift), ord("z"))] + [chr(letter) for letter in
-                                                                              range((ord("Z") - shift), ord("Z"))]
+    alph = [chr(letter) for letter in range((ord("z") - shift + 1), ord("z") + 1)] + [chr(letter) for letter in
+                                                                                      range((ord("Z") - shift + 1),
+                                                                                            ord("Z") + 1)]
     for letter in plaintext:
         if (ord("a") <= ord(letter) <= ord("z")) or (ord("A") <= ord(letter) <= ord("Z")):
             if letter in alph:
@@ -59,10 +61,7 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     Brute force breaking a Caesar cipher.
     """
     best_shift = 0
-    chars = ciphertext.split()
-    for char in chars:
-        for i in range(0, 26):
-            dword = decrypt_caesar(char, i)
-            if dword in dictionary:
-                best_shift = i
+    for i in range(26):
+        if decrypt_caesar(ciphertext, i) in dictionary:
+            best_shift = i
     return best_shift

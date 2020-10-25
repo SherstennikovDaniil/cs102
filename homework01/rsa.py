@@ -2,6 +2,7 @@ import random
 import typing as tp
 import math
 
+
 def is_prime(n: int) -> bool:
     """
     Tests to see if a number is prime.
@@ -36,7 +37,7 @@ def gcd(a: int, b: int) -> int:
             a %= b
         else:
             b %= a
-    return a+b
+    return a + b
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
@@ -48,7 +49,7 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     23
     """
     e %= phi
-    for i in range(1,phi):
+    for i in range(1, phi):
         if (e * i) % phi == 1:
             return i
     return 0
@@ -60,10 +61,10 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
     elif p == q:
         raise ValueError("p and q cannot be equal")
 
-    n = p*q
+    n = p * q
     # PUT YOUR CODE HERE
 
-    phi = (p-1)*(q-1)
+    phi = (p - 1) * (q - 1)
     # PUT YOUR CODE HERE
 
     # Choose an integer e such that e and phi(n) are coprime
