@@ -15,11 +15,10 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    alph = [chr(letter) for letter in range((ord("z") - shift + 1), ord("z") + 1)] + [chr(letter) for letter in
-                                                                                      range((ord("Z") - shift + 1),
-                                                                                            ord("Z") + 1)]
+    alph = [chr(letter) for letter in range((ord("z") - shift + 1), ord("z") + 1)]
+    alph.extend([chr(letter) for letter in range((ord("Z") - shift + 1), ord("Z") + 1)])
     for letter in plaintext:
-        if (ord("a") <= ord(letter) <= ord("z")) or (ord("A") <= ord(letter) <= ord("Z")):
+        if ("a" <= letter <= "z") or ("A" <= letter <= "Z"):
             if letter in alph:
                 ciphertext = ciphertext + chr(ord(letter) - 26 + shift)
             else:
@@ -43,10 +42,10 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    alph = [chr(letter) for letter in range(ord("a"), (ord("a") + shift))] + [chr(letter) for letter in
-                                                                              range(ord("A"), (ord("A") + shift))]
+    alph = [chr(letter) for letter in range(ord("a"), (ord("a") + shift))]
+    alph.extend([chr(letter) for letter in range(ord("A"), (ord("A") + shift))])
     for letter in ciphertext:
-        if (ord("a") <= ord(letter) <= ord("z")) or (ord("A") <= ord(letter) <= ord("Z")):
+        if ("a" <= letter <= "z") or ("A" <= letter <= "Z"):
             if letter in alph:
                 plaintext = plaintext + chr(ord(letter) + 26 - shift)
             else:
