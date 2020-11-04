@@ -81,9 +81,9 @@ def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     start = pos[0] - l_row, pos[1] - l_col
     for i in range(3):
         for j in range(3):
-            ans.append(grid[start[0] + i][start[1] + j])
+            ans += grid[start[0] + i][start[1] + j]
 
-    return [ans[i] for i in range(len(ans))]
+    return ans
 
 
 def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
@@ -148,8 +148,10 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
 
 def check_solution(solution: List[List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
-    # TODO: Add doctests with bad puzzles
-    pass
+    for i in solution:
+        if set(i) != set("123456789"):
+            return False
+    return True
 
 
 def generate_sudoku(N: int) -> List[List[str]]:
@@ -174,7 +176,7 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+
 
 
 if __name__ == '__main__':
