@@ -29,6 +29,7 @@ def group(values: List[str], n: int) -> List[List[str]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
+
     return [values[i:i + n] for i in range(0, len(values), n)]
 
 
@@ -42,6 +43,7 @@ def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
+
     return grid[pos[0]]
 
 
@@ -55,11 +57,11 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    col_list = []
+    col = []
     for i in grid:
-        col_list.append(str(grid[i][pos[1]]))
+        col += i[pos[1]]
 
-    return col_list
+    return col
 
 
 def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -113,9 +115,9 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     >>> values == {'2', '5', '9'}
     True
     """
-    nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-    for number in nums:
-        if
+    possible_values = set("123456789") - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))
+
+    return possible_values
 
 def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
     """ Решение пазла, заданного в grid """
@@ -130,7 +132,7 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    pass
+
 
 
 def check_solution(solution: List[List[str]]) -> bool:
