@@ -63,7 +63,7 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    col = []
+    col = []  # type: ignore
     for i in grid:
         col += i[pos[1]]
 
@@ -83,7 +83,7 @@ def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     """
     l_row = pos[0] % 3
     l_col = pos[1] % 3
-    ans = []
+    ans = []  # type: ignore
     start = pos[0] - l_row, pos[1] - l_col
     for i in range(3):
         for j in range(3):
@@ -189,15 +189,15 @@ def generate_sudoku(N: int) -> List[List[str]]:
     >>> check_solution(solution)
     True
     """
-    grid = solve([["."] * 9 for _ in range(9)])
+    grid = solve([["."] * 9 for _ in range(9)])  # type: ignore
     N = 81 - min(81, max(0, N))
     while N:
         row = randint(0, 8)
         col = randint(0, 8)
-        if grid[row][col] != ".":
-            grid[row][col] = "."
+        if grid[row][col] != ".":  # type: ignore
+            grid[row][col] = "."  # type: ignore
             N -= 1
-    return grid
+    return grid  # type: ignore
 
 
 if __name__ == "__main__":
