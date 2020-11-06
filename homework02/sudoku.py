@@ -157,6 +157,12 @@ def check_solution(solution: List[List[str]]) -> bool:
     for i in solution:
         if set(i) != set("123456789"):
             return False
+    for i in range(len(solution)):
+        if set(get_row(solution, (i, 0))) != set("123456789"):
+            return False
+        if set(get_col(solution, (0, i))) != set("123456789"):
+            return False
+
     return True
 
 
