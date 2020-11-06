@@ -65,7 +65,7 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     """
     col = []  # type: ignore
     for i in grid:
-        col += i[pos[1]]
+        col.append(i[pos[1]])
 
     return col
 
@@ -87,7 +87,7 @@ def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     start = pos[0] - l_row, pos[1] - l_col
     for i in range(3):
         for j in range(3):
-            ans += grid[start[0] + i][start[1] + j]
+            ans.append(grid[start[0] + i][start[1] + j])
 
     return ans
 
