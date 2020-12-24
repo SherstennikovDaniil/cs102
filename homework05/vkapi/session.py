@@ -3,6 +3,7 @@ import typing as tp
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from time import sleep
 
 
 class Session:
@@ -20,7 +21,7 @@ class Session:
         timeout: float = 5.0,
         max_retries: int = 3,
         backoff_factor: float = 0.3,
-    ) -> None:
+    ):
         pass
 
     def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
