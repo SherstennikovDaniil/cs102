@@ -9,7 +9,9 @@ from pyvcs.objects import hash_object
 from pyvcs.refs import get_ref, is_detached, resolve_head, update_ref
 
 
-def write_tree(gitdir: pathlib.Path, index: tp.List[GitIndexEntry], dirname: str = "") -> str:
+def write_tree(
+    gitdir: pathlib.Path, index: tp.List[GitIndexEntry], dirname: str = ""
+) -> str:
     """
     Write a tree as a git object and return its' hash
     """
@@ -25,14 +27,10 @@ def write_tree(gitdir: pathlib.Path, index: tp.List[GitIndexEntry], dirname: str
             name = f"{os.sep}".join(names[1:])
             mode = "40000"  # mode magic
             tree_entry = f"{mode} {prefix}\0".encode()
-            tree_entry += bytes.fromhex(
-                write_tree(gitdir, index, name)
-            )
+            tree_entry += bytes.fromhex(write_tree(gitdir, index, name))
             tree_entries.append(tree_entry)
         else:
-            if (
-                dirname and entry.name.find(dirname) == -1
-            ):
+            if dirname and entry.name.find(dirname) == -1:
                 continue
             with open(entry.name, "rb") as content:
                 data = content.read()

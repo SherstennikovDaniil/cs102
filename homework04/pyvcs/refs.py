@@ -2,7 +2,9 @@ import pathlib
 import typing as tp
 
 
-def update_ref(gitdir: pathlib.Path, ref: tp.Union[str, pathlib.Path], new_value: str) -> None:
+def update_ref(
+    gitdir: pathlib.Path, ref: tp.Union[str, pathlib.Path], new_value: str
+) -> None:
     """
     Set new value to a ref
     """

@@ -48,7 +48,9 @@ def add_hash_object_subparser(subparsers) -> None:
         action="store_true",
         help="Actually write the object into the database",
     )
-    hash_object_subparser.add_argument("path", type=pathlib.Path, help="Read object from <file>")
+    hash_object_subparser.add_argument(
+        "path", type=pathlib.Path, help="Read object from <file>"
+    )
     hash_object_subparser.set_defaults(func=cmd_hash_object)
 
 
@@ -97,7 +99,11 @@ def add_update_index_subparser(subparsers) -> None:
         "update-index", help="Add file contents to the index."
     )
     update_index_subparser.add_argument(
-        "paths", nargs="+", metavar="path", type=pathlib.Path, help="path(s) of files to add"
+        "paths",
+        nargs="+",
+        metavar="path",
+        type=pathlib.Path,
+        help="path(s) of files to add",
     )
     update_index_subparser.add_argument(
         "--add",
@@ -117,9 +123,13 @@ def add_write_tree_subparser(subparsers) -> None:
 
 def add_commit_tree_subparser(subparsers) -> None:
     # FIXME: Add author
-    commit_tree_subparser = subparsers.add_parser("commit-tree", help="Create a new commit object.")
+    commit_tree_subparser = subparsers.add_parser(
+        "commit-tree", help="Create a new commit object."
+    )
     commit_tree_subparser.add_argument("tree", help="An existing tree object")
-    commit_tree_subparser.add_argument("-p", dest="parent", help="Id of a parent commit object")
+    commit_tree_subparser.add_argument(
+        "-p", dest="parent", help="Id of a parent commit object"
+    )
     commit_tree_subparser.add_argument(
         "-m", dest="message", help="A paragraph in the commit log message"
     )
@@ -145,7 +155,9 @@ def add_rev_parse_subparser(subparsers) -> None:
 
 def add_symbolic_ref_subparser(subparsers) -> None:
     # FIXME: Добавить описание для аргументов
-    symbolic_ref_subparser = subparsers.add_parser("symbolic-ref", help="Modify symbolic refs.")
+    symbolic_ref_subparser = subparsers.add_parser(
+        "symbolic-ref", help="Modify symbolic refs."
+    )
     symbolic_ref_subparser.add_argument("name", help="")
     symbolic_ref_subparser.add_argument("ref", help="")
     symbolic_ref_subparser.set_defaults(func=cmd_symbolic_ref)

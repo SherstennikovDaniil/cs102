@@ -12,6 +12,7 @@ class GitIndexEntry(tp.NamedTuple):
     """
     An index entry in readable format
     """
+
     ctime_s: int
     ctime_n: int
     mtime_s: int
@@ -148,9 +149,7 @@ def ls_files(gitdir: pathlib.Path, details: bool = False) -> None:
     index_entries = read_index(gitdir)
     if details:
         for entry in index_entries:
-            mode = str(oct(entry.mode))[
-                2:
-            ]
+            mode = str(oct(entry.mode))[2:]
             sha = entry.sha1.hex()
             stage = (entry.flags >> 12) & 3
             print(f"{mode} {sha} {stage}\t{entry.name}")
@@ -159,16 +158,16 @@ def ls_files(gitdir: pathlib.Path, details: bool = False) -> None:
             print(f"{entry.name}")
 
 
-def update_index(gitdir: pathlib.Path, paths: tp.List[pathlib.Path], write: bool = True) -> None:
+def update_index(
+    gitdir: pathlib.Path, paths: tp.List[pathlib.Path], write: bool = True
+) -> None:
     """
     Update index by adding new files
     """
     index_entries: tp.List[GitIndexEntry] = []
     absolute_paths = [i.absolute() for i in paths]
     absolute_paths.sort()
-    relative_paths = [
-        i.relative_to(os.getcwd()) for i in absolute_paths
-    ]
+    relative_paths = [i.relative_to(os.getcwd()) for i in absolute_paths]
     relative_paths.reverse()
     for path in relative_paths:
         with open(path, "rb") as f_name:
