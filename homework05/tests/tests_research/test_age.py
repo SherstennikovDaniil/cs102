@@ -1,7 +1,7 @@
 import datetime as dt
 import unittest
 
-import responses
+import responses    # type: ignore
 from research.age import age_predict
 
 

@@ -1,9 +1,9 @@
-import gensim
-import pyLDAvis.gensim
-from gensim.corpora import Dictionary
-from textacy import preprocessing
-from tqdm import tqdm
-from vkapi.wall import get_wall_execute
+import gensim   # type: ignore
+import pyLDAvis.gensim  # type: ignore
+from gensim.corpora import Dictionary   # type: ignore
+from textacy import preprocessing   # type: ignore
+from tqdm import tqdm   # type: ignore
+from vkapi.wall import get_wall_execute # type: ignore
 
 
 def example():

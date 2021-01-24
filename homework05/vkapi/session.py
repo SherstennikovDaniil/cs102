@@ -3,7 +3,7 @@ import typing as tp
 import requests
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RetryError
-from urllib3.util import Retry
+from urllib3.util import Retry  # type: ignore
 
 
 class Session(requests.Session):
