@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import unquote
 
-import pandas as pd # type: ignore
-import responses    # type: ignore
+import pandas as pd  # type: ignore
+import responses  # type: ignore
 from vkapi.wall import get_wall_execute
 
 
