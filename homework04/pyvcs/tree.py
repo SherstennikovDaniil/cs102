@@ -50,9 +50,6 @@ def commit_tree(
     parent: tp.Optional[str] = None,
     author: tp.Optional[str] = None,
 ) -> str:
-    """
-    Commit a tree
-    """
     timestamp = int(time.mktime(time.localtime()))
     timezone = time.timezone if (time.localtime().tm_isdst == 0) else time.altzone
     timezone = int(timezone / 60 / 60 * -1)
@@ -62,16 +59,10 @@ def commit_tree(
         tz_offset = f"-0{timezone}00"
     else:
         tz_offset = "0000"
-    if not author:
-        author = ""
+    author_name = os.getenv("GIT_AUTHOR_NAME")
     email = os.getenv("GIT_AUTHOR_EMAIL")
-    if not email:
-        email = ""
-    if not parent:
-        parent = ""
-
-    author_str = f"{author} <{email}>"
-
+    if email or author_name:
+        author = f"{author_name} <{email}>"
     data = f"tree {tree}\n"
     if parent:
         data += f"parent {parent}\n"
