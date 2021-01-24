@@ -27,7 +27,25 @@ def get_friends(
     :param fields: Список полей, которые нужно получить для каждого пользователя.
     :return: Список идентификаторов друзей пользователя или список пользователей.
     """
-    pass
+    response = session.get(
+        "friends.get",
+        params={
+            "user_id": user_id,
+            "count": count,
+            "offset": offset,
+            "fields": fields,
+            "access_token": config.VK_CONFIG["access_token"],
+            "v": config.VK_CONFIG["version"],
+        },
+    )
+    if response.status_code == 500:
+        raise APIError
+    resp_json = response.json()
+    if "response" in resp_json:
+        data = resp_json["response"]
+    else:
+        raise APIError
+    return FriendsResponse(count=data["count"], items=data["items"])
 
 
 class MutualFriends(tp.TypedDict):
@@ -55,4 +73,61 @@ def get_mutual(
     :param offset: Смещение, необходимое для выборки определенного подмножества общих друзей.
     :param progress: Callback для отображения прогресса.
     """
-    pass
+    if target_uid:
+        response = session.get(
+            "friends.getMutual",
+            params={
+                "source_uid": source_uid,
+                "target_uid": target_uid,
+                "order": order,
+                "count": count,
+                "offset": offset,
+                "access_token": config.VK_CONFIG["access_token"],
+                "v": config.VK_CONFIG["version"],
+            },
+        )
+        if response.status_code == 500:
+            raise APIError
+        resp_json = response.json()
+        if "response" in resp_json:
+            return resp_json["response"]
+        raise APIError
+
+    res = []  # type: ignore
+    if not target_uids:
+        raise Exception
+    window = range(0, len(target_uids), 100)
+    if progress:
+        window = progress(window)
+
+    for pos in window:
+        response = session.get(
+            "friends.getMutual",
+            params={
+                "source_uid": source_uid,
+                "target_uids": ",".join([str(i) for i in target_uids[pos : pos + 100]]),
+                "order": order,
+                "count": count,
+                "offset": offset + pos,
+                "access_token": config.VK_CONFIG["access_token"],
+                "v": config.VK_CONFIG["version"],
+            },
+        )
+        if response.status_code == 500:
+            raise APIError
+        resp_json = response.json()
+        if "response" in resp_json:
+            data = resp_json["response"]
+        else:
+            raise APIError
+        res.extend(
+            MutualFriends(  # type: ignore
+                id=info["id"],
+                common_friends=info["common_friends"],
+                common_count=info["common_count"],
+            )
+            for info in data
+        )
+        time.sleep(1 / 3 + 0.01)
+
+    return res
