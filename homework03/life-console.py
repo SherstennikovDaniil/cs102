@@ -65,9 +65,7 @@ class Console(UI):
 
 if __name__ == "__main__":
     args = life.get_args()
-    game_instance = life.GameOfLife(
-        (args.rows, args.rows), max_generations=args.max_gens
-    )
+    game_instance = life.GameOfLife((args.rows, args.rows), max_generations=args.max_gens)
     if args.load_path:
         game_instance = game_instance.from_file(args.load_path)
     ui = Console(game_instance)
