@@ -1,8 +1,7 @@
 import pathlib
 
-import pygame
-
 import life
+import pygame
 from life import GameOfLife
 from ui import UI
 
@@ -15,28 +14,20 @@ class GUI(UI):
         self.height = self.life.rows * cell_size
         self.cell_size = cell_size
 
-        self.screen = pygame.display.set_mode(
-            (self.width, self.height)
-        )  # create screen
+        self.screen = pygame.display.set_mode((self.width, self.height))  # create screen
         self.speed = speed
 
     def draw_lines(self) -> None:
         for x_c in range(0, self.width, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (x_c, 0), (x_c, self.height)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (x_c, 0), (x_c, self.height))
         for y_c in range(0, self.height, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (0, y_c), (self.width, y_c)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (0, y_c), (self.width, y_c))
 
     def draw_grid(self) -> None:
         for i in range(len(self.life.curr_generation)):
             for j in range(len(self.life.curr_generation[i])):
                 cell_color = (
-                    pygame.Color("green")
-                    if self.life.is_alive((i, j))
-                    else pygame.Color("white")
+                    pygame.Color("green") if self.life.is_alive((i, j)) else pygame.Color("white")
                 )
                 rect = pygame.Rect(
                     self.cell_size * j,

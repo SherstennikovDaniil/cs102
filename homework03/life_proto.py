@@ -35,13 +35,9 @@ class GameOfLife:
     def draw_lines(self) -> None:
         """ Отрисовать сетку """
         for x_c in range(0, self.width, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (x_c, 0), (x_c, self.height)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (x_c, 0), (x_c, self.height))
         for y_c in range(0, self.height, self.cell_size):
-            pygame.draw.line(
-                self.screen, pygame.Color("black"), (0, y_c), (self.width, y_c)
-            )
+            pygame.draw.line(self.screen, pygame.Color("black"), (0, y_c), (self.width, y_c))
 
     def run(self) -> None:
         pygame.init()
@@ -99,11 +95,7 @@ class GameOfLife:
         """
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
-                cell_color = (
-                    pygame.Color("green")
-                    if self.alive((i, j))
-                    else pygame.Color("white")
-                )
+                cell_color = pygame.Color("green") if self.alive((i, j)) else pygame.Color("white")
                 rect = pygame.Rect(
                     self.cell_size * j,
                     self.cell_size * i,
@@ -168,3 +160,7 @@ class GameOfLife:
 if __name__ == "__main__":
     game = GameOfLife(320, 240, 20)
     game.run()
+
+"""
+Заново делаю реквест.
+"""
