@@ -5,10 +5,9 @@ from bs4 import BeautifulSoup
 def extract_news(parser):
     """ Extract news from a given web page """
     news_list = []
-
-    # PUT YOUR CODE HERE
-
-    return news_list
+    authors = [x.text for x in parser.body.findall("a", {"class": "hnuser"})]
+    comments = [x for x in parser.body.findall("a") if "item&id=" in x.attrs["href"]]
+    return news_list, authors
 
 
 def extract_next_page(parser):
@@ -29,4 +28,3 @@ def get_news(url, n_pages=1):
         news.extend(news_list)
         n_pages -= 1
     return news
-

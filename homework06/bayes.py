@@ -1,5 +1,4 @@
 class NaiveBayesClassifier:
-
     def __init__(self, alpha):
         pass
 
@@ -14,4 +13,3 @@ class NaiveBayesClassifier:
     def score(self, X_test, y_test):
         """ Returns the mean accuracy on the given test data and labels. """
         pass
-
