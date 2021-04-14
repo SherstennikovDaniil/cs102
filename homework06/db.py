@@ -21,21 +21,3 @@ class News(Base):
 
 
 Base.metadata.create_all(bind=engine)
-
-s = session()
-news = get_news('https://news.ycombinator.com/newest', 50)
-
-for article in news:
-    # Пропуск опросов.
-    if 'Ask HN' not in article.get('title'):
-        post = News(
-            title=article.get('title'),
-            author=article.get('author'),
-            url=article.get('url'),
-            comments=article.get('comments'),
-            points=article.get('points')
-        )
-        s.add(post)
-    else:
-        pass
-s.commit()
