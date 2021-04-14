@@ -16,7 +16,11 @@ def news_list():
 
 @route("/add_label/")
 def add_label():
-    # PUT YOUR CODE HERE
+    lbl = request.query.label
+    id = request.query.id
+    s = session()
+    s.query(News).filter(News.id == id).update({News.label: lbl}, synchronize_session = False)
+    s.commit()
     redirect("/news")
 
 
@@ -28,7 +32,7 @@ def update_news():
 
 @route("/classify")
 def classify_news():
-    #PUT YOUR CODE HERE
+    pass
 
 
 if __name__ == "__main__":
