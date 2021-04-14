@@ -15,20 +15,20 @@ def extract_news(parser):
         fathers.append(values)
     for father in fathers[:-1]:
         author = father[1].findChildren('a', {'class': 'hnuser'})[0].text
-        comment = father[1].findChildren('td', {'class': 'subtext'})[0].findChildren('a')[-1].text
-        if comment == 'discuss':
-            comment = 0
+        comments = father[1].findChildren('td', {'class': 'subtext'})[0].findChildren('a')[-1].text
+        if comments == 'discuss':
+            comments = 0
         else:
-            comment = int(comment[:-8])
-        likes = father[1].findChildren('td', {'class': 'subtext'})[0].findChildren('span', {'class': 'score'})[0].text
-        likes = int(likes.split(' ')[0])
+            comments = int(comments[:-8])
+        points = father[1].findChildren('td', {'class': 'subtext'})[0].findChildren('span', {'class': 'score'})[0].text
+        points = int(points.split(' ')[0])
         title = father[0].findChildren('a', {'class': 'storylink'})[0].text
         mur = father[0].findChildren('a', {'class': 'storylink'})[0]
         url = mur.get('href')
         news_list.append({
             'author': author,
-            'comments': comment,
-            'points': likes,
+            'comments': comments,
+            'points': points,
             'title': title,
             'url': url
         })
