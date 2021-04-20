@@ -1,15 +1,15 @@
-from sqlalchemy import Column, String, Integer
+import os
+
+from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from scraputils import get_news
 
 Base = declarative_base()
-engine = create_engine("sqlite:///news.db")
+engine = create_engine(f"sqlite:///{os.path.dirname(os.path.realpath(__file__))}/../news.db")
 session = sessionmaker(bind=engine)
 
 
-class News(Base):
+class News(Base):  # type: ignore
     __tablename__ = "news"
     id = Column(Integer, primary_key=True)
     title = Column(String)
