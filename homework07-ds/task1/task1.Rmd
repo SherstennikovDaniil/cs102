@@ -1,0 +1,120 @@
+---
+title: "week1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## <center> [mlcourse.ai](https://mlcourse.ai) – открытый курс OpenDataScience по машинному обучению
+
+Автор материала: Юрий Кашницкий (@yorko в Slack ODS). Материал распространяется на условиях лицензии [Creative Commons CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Можно использовать в любых целях (редактировать, поправлять и брать за основу), кроме коммерческих, но с обязательным упоминанием автора материала.
+
+# <center>Домашнее задание № 1 (демо).<br> Анализ данных по доходу населения UCI Adult</center>
+
+**В задании предлагается с помощью R ответить на несколько вопросов по данным репозитория UCI [Adult](https://archive.ics.uci.edu/ml/datasets/Adult).**
+
+Уникальные значения признаков (больше информации по ссылке выше):
+- age: continuous.
+- workclass: Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked.
+- fnlwgt: continuous.
+- education: Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool.
+- education-num: continuous.
+- marital-status: Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse.
+- occupation: Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces.
+- relationship: Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried.
+- race: White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black.
+- sex: Female, Male.
+- capital-gain: continuous.
+- capital-loss: continuous.
+- hours-per-week: continuous.
+- native-country: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands.
+- salary: >50K,<=50K
+
+```{r echo=False}
+# https://stackoverflow.com/questions/43592316/warning-in-install-packages-installation-of-package-tidyverse-had-non-zero-e/43649793
+# please install packages from there if R drops errors in install.packages
+# because he thinks recompiling EVERYTHING from source every time is hilarious
+install.packages("tidyverse")
+install.packages("gmodels")
+library(tidyverse)
+library(gmodels)
+data <- read.csv("../data/adult.data.csv")
+head(data)
+```
+
+**1. Сколько мужчин и женщин (признак *sex*) представлено в этом наборе данных?**
+
+```{r}
+dplyr::count(data, sex, sort = TRUE)
+```
+
+**2. Каков средний возраст (признак *age*) женщин?**
+
+```{r}
+mean(subset(data, data$sex == "Female")$age)
+```
+
+**3. Какова доля граждан Германии (признак *native-country*)?**
+```{r}
+nrow(subset(data, data$native.country == "Germany")) / nrow(data)
+```
+
+**4-5. Каковы средние значения и среднеквадратичные отклонения возраста тех, кто получает более 50K в год (признак *salary*) и тех, кто получает менее 50K в год? **
+
+```{r}
+ages_rich <- subset(data, data$salary == ">50K")$age
+ages_poor <- subset(data, data$salary == "<=50K")$age
+sprintf("Rich people average age: %s +- %s", mean(ages_rich), sd(ages_rich))
+sprintf("Poor people average age: %s +- %s", mean(ages_poor), sd(ages_poor))
+```
+
+**6. Правда ли, что люди, которые получают больше 50k, имеют как минимум высшее образование? (признак *education – Bachelors, Prof-school, Assoc-acdm, Assoc-voc, Masters* или *Doctorate*)**
+
+```{r}
+sprintf(unique(subset(data, data$salary == ">50K")$education))
+sprintf("Неверно.")
+```
+
+**7. Выведите статистику возраста для каждой расы (признак *race*) и каждого пола. Найдите таким образом максимальный возраст мужчин расы *Amer-Indian-Eskimo*.**
+
+```{r}
+subframe <- group_by(data, data$race, data$sex, data$age)
+data %>% group_by(race, sex) %>% summarise(a_count=length(age), a_mean=mean(age), a_std=sd(age), a_min=min(age), a_25=quantile(age, c(.25)), a_50=median(age), a_75=quantile(age, c(.75)), a_max=max(age))
+# Nice of you to not have subframe["age"].describe(), R.
+```
+
+**8. Среди кого больше доля зарабатывающих много (>50K): среди женатых или холостых мужчин (признак *marital-status*)? Женатыми считаем тех, у кого *marital-status* начинается с *Married* (Married-civ-spouse, Married-spouse-absent или Married-AF-spouse), остальных считаем холостыми.**
+
+```{r}
+dplyr::count(subset(data, (data$sex == "Male" & startsWith(data$marital.status, "Married"))), salary, sort = TRUE)
+```
+
+```{r}
+dplyr::count(subset(data, (data$sex == "Male" & (data$marital.status %in% c("Never-married", "Separated", "Divorced")))), salary, sort = TRUE)
+```
+
+```{r}
+dplyr::count(data, marital.status, sort = TRUE)
+```
+
+**9. Какое максимальное число часов человек работает в неделю (признак *hours-per-week*)? Сколько людей работают такое количество часов и каков среди них процент зарабатывающих много?**
+
+```{r}
+max_working_hours <- max(data$hours.per.week)
+sprintf("Largest workload: %s hrs per week", max_working_hours)
+workers <- nrow(subset(data, data$hours.per.week == max_working_hours))
+sprintf("%s workers work maximum hours", workers)
+earnings_share <- nrow(subset(data, (data$hours.per.week == max_working_hours) & (data$salary == ">50K"))) / workers
+sprintf("Rich share: %s percent", 100 * earnings_share)
+```
+
+**10. Посчитайте среднее время работы (*hours-per-week*) зарабатывающих мало и много (*salary*) для каждой страны (*native-country*).**
+
+```{r}
+data %>% group_by(native.country, salary) %>% summarise(mean_hours=mean(hours.per.week))
+# nice of you not to have aggfunc in crosstab, R
+# also nice of you to have crosstab in a separate package
+# And also nice of you to recompile your packages from source every goddamn time someone runs install.packages("package-name")
+```

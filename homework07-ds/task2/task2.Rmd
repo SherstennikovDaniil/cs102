@@ -1,0 +1,133 @@
+---
+title: "week1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## <center> [mlcourse.ai](https://mlcourse.ai) – открытый курс OpenDataScience по машинному обучению 
+    
+Автор материала: Екатерина Демидова, Data Scientist @ Segmento. Материал распространяется на условиях лицензии [Creative Commons CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Можно использовать в любых целях (редактировать, поправлять и брать за основу), кроме коммерческих, но с обязательным упоминанием автора материала.
+
+# <center>Домашнее задание № 2 (демо). <br> Визуальный анализ данных о публикациях на Хабрахабре</center>
+
+```{r echo=False}
+# https://stackoverflow.com/questions/43592316/warning-in-install-packages-installation-of-package-tidyverse-had-non-zero-e/43649793
+# please install packages from there if R drops errors in install.packages
+# because he thinks recompiling EVERYTHING from source every time is hilarious
+install.packages("tidyverse")
+install.packages("gmodels")
+install.packages("gglot2")
+install.packages("lubridate")
+library(lubridate)
+library(tidyverse)
+library(gmodels)
+library(ggplot2)
+df <- read.csv("../data/howpop_train.csv")
+sprintf("%s, %s", nrow(data), ncol(data))
+t(head(df, 3))
+```
+
+```{r}
+df <- dplyr::select(df, -ends_with("_lognorm"))
+t(summary(df))
+```
+
+```{r}
+df <- mutate(df, published=ymd_hms(published))
+df <- mutate(df, year=year(published), month=month(published), dayofweek=weekdays(published), hour=hour(published))
+```
+
+## 1\. В каком месяце (и какого года) было больше всего публикаций?
+
+* март 2016
+* **март 2015**
+* апрель 2015
+* апрель 2016
+
+```{r}
+df <- mutate(df, month_of_year=paste(year(published), "-", month(published)))
+months <-dplyr::count(df, month_of_year, sort = TRUE)
+months
+best_month <- months[,1][1]
+sprintf("Month with most publications: %s", best_month)
+```
+
+## 2\. Проанализируйте публикации в месяце из предыдущего вопроса
+
+Выберите один или несколько вариантов:
+
+* Один или несколько дней сильно выделяются из общей картины - Нет, не выделяются (если учитывать вариации по дням недели, конечно)
+* На хабре _всегда_ больше статей, чем на гиктаймсе (нет, например, 21 марта 2015 на gt было больше)
+* **По субботам на гиктаймс и на хабрахабр публикуют примерно одинаковое число статей**
+
+```{r}
+df_best_month <- subset(df, df$month_of_year == best_month)
+df_best_month <- mutate(df_best_month, day = day(df_best_month$published))
+ggplot(df_best_month, aes(x = day)) + geom_bar(stat = "count")
+```
+
+```{r}
+ggplot(df_best_month, aes(x = day, color = domain)) + geom_bar(stat = "count")
+```
+
+```{r}
+ggplot(df_best_month, aes(x = dayofweek, color = domain)) + geom_bar(stat = "count")
+```
+
+## 3\. Когда лучше всего публиковать статью?
+
+* Больше всего просмотров набирают статьи, опубликованные в 12 часов дня - неверно
+* У опубликованных в 10 утра постов больше всего комментариев - нет, наоборот, меньше всего
+* **Больше всего просмотров набирают статьи, опубликованные в 6 часов утра**
+* Максимальное число комментариев на гиктаймсе набрала статья, опубликованная в 9 часов вечера - неверно
+* На хабре дневные статьи комментируют чаще, чем вечерние - неверно
+
+```{r}
+ggplot(df, aes(x = hour, color = domain)) + geom_bar(stat = "count")
+```
+
+```{r}
+views_by_hour <- group_by(df, df$hour)
+plot(summarise(views_by_hour, avg=mean(views, na.rm=TRUE)), views_by_hour$hour, type="l", ylab="views")
+```
+
+```{r}
+views_by_hour <- group_by(df, df$hour)
+plot(summarise(views_by_hour, avg=mean(comments, na.rm=TRUE)), views_by_hour$hour, type="l", ylab="comments")
+```
+
+```{r}
+df_habr <- subset(df, df$domain == "habrahabr.ru")
+df_habr <- group_by(df_habr, df_habr$hour)
+plot(summarise(df_habr, avg=mean(comments, na.rm=TRUE)), df_habr$hour, type="l", ylab="comments")
+```
+
+```{r}
+df_geek <- subset(df, df$domain == "geektimes.ru")
+df_geek <- group_by(df_geek, df_geek$hour)
+plot(summarise(df_geek, max=max(comments, na.rm=TRUE)), df_geek$hour, type="l", ylab="comments")
+```
+
+## 4\. Кого из топ-20 авторов чаще всего минусуют?
+
+* @Mordatyj
+* **@Mithgol**
+* @alizar
+* @ilya42
+
+```{r}
+df_authors <- subset(df, df$author %in% c("@Mordatyj", "@Mithgol", "@alizar", "@ilya42"))
+df_authors <- group_by(df_authors, df_authors$author)
+summarise(df_authors, avg=mean(votes_minus, na.rm=TRUE))
+```
+
+## 5\. Сравните субботы и понедельники
+
+Правда ли, что по субботам авторы пишут в основном днём, а по понедельникам — в основном вечером? - Нет, по понедельникам статьи выходят в основном днём, а по субботам - днём или вечером?
+
+```{r}
+ggplot(subset(df, df$dayofweek %in% c("Monday", "Saturday")), aes(x = hour, color = dayofweek)) + geom_bar(stat = "count")
+```
