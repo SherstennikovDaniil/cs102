@@ -1,1 +1,1 @@
-ITMO University Python + Data Science Course
+# ITMO University Python + Data Science Course
